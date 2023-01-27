@@ -1,20 +1,27 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'com.hyunjine.flow_task'
-    compileSdk 32
+    compileSdk compile_version
 
     defaultConfig {
         applicationId "com.hyunjine.flow_task"
-        minSdk 26
-        targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        minSdk min_version
+        targetSdk target_version
+        versionCode version_code
+        versionName version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "NAVER_SEARCH_CLIENT_ID", properties['naver_search_client_id']
+        buildConfigField "String", "NAVER_SEARCH_CLIENT_SECRET", properties['naver_search_client_secret']
     }
 
     buildTypes {
@@ -30,15 +37,42 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation deps.core_ktx
+    implementation deps.appcompat
+    implementation deps.material_design
+    implementation deps.constraint_layout
+    testImplementation deps.junit
+    androidTestImplementation deps.ext_junit
+    androidTestImplementation deps.espresso
+
+    // ktx
+    implementation deps.activity_ktx
+    implementation deps.fragment_ktx
+
+    // RxJava
+    implementation deps.rx.java
+    implementation deps.rx.android
+
+    // Hilt
+    implementation deps.hilt.runtime
+    kapt deps.hilt.compiler
+
+    // Retrofit
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.retrofit.rxjava2
+
+    // OkHttp - Logging Interceptor
+    implementation deps.okhttp
+
+    // Glide
+    implementation deps.glide.runtime
+    annotationProcessor deps.glide.compiler
 }
