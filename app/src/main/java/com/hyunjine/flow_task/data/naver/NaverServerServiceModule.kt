@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NaverServerServiceModule {
-    private const val BASE_URL: String = "https://openapi.naver.com/v1/search/movie.json/"
+    private const val BASE_URL: String = "https://openapi.naver.com/v1/search/"
 
     @Singleton
     @Provides

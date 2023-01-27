@@ -1,14 +1,14 @@
 package com.hyunjine.flow_task.data.naver
 
+import com.hyunjine.flow_task.data.naver.vo.MoviesEntity
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface NaverServerService {
-    @GET("gstations")
+    @GET("movie.json")
     fun getSearchMovie(
-        @Query("meters") meters: Int,
-        @Query("lat") latitude: Double,
-        @Query("lon") longitude: Double
-    ): Single<GasStations>
+        @Query("query", encoded = true) query: String,
+        @Query("display") display: Int
+    ): Single<MoviesEntity>
 }

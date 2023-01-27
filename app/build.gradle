@@ -54,7 +54,6 @@ dependencies {
 
     // ktx
     implementation deps.activity_ktx
-    implementation deps.fragment_ktx
 
     // RxJava
     implementation deps.rx.java
