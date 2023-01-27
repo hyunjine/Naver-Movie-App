@@ -15,7 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class SearchMovieListAdapter @Inject constructor(@ApplicationContext private val context: Context) :
-    ListAdapter<MovieItemDTO, SearchMovieListAdapter.SearchMovieViewHolder>(MainDiaryListDiff()) {
+    ListAdapter<MovieItemDTO, SearchMovieListAdapter.SearchMovieViewHolder>(SearchMovieDiff()) {
     private lateinit var listener: (MovieItemDTO, Int) -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchMovieViewHolder =
@@ -42,7 +42,6 @@ class SearchMovieListAdapter @Inject constructor(@ApplicationContext private val
             }
         }
         fun bind(movie: MovieItemDTO) {
-            logg
             binding.run {
                 tvMovieTitle.text = movie.title
                 tvMovieYear.text = movie.pubDate
@@ -57,7 +56,7 @@ class SearchMovieListAdapter @Inject constructor(@ApplicationContext private val
         }
     }
 
-    class MainDiaryListDiff : DiffUtil.ItemCallback<MovieItemDTO>() {
+    class SearchMovieDiff : DiffUtil.ItemCallback<MovieItemDTO>() {
         override fun areItemsTheSame(oldItem: MovieItemDTO, newItem: MovieItemDTO): Boolean =
             oldItem.image == newItem.image
 

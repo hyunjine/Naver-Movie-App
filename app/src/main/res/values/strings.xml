@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">Flow-Task</string>
     <string name="network_error">네트워크 통신에 오류가 발생했습니다.\n확인 후 다시 시도해 주세요.</string>
-
-    <!-- SearchMovieActivity -->
     <string name="search">검색</string>
     <string name="recent_search">최근 검색</string>
+
+    <!-- SearchMovieActivity -->
     <string name="search_movie_empty_data">검색 결과가 없습니다.</string>
+    <string name="search_movie_title_format">제목: %1s</string>
+    <string name="search_movie_pub_date_format">출시: %1s</string>
+    <string name="search_movie_user_rating_format">평점: %1s</string>
 </resources>

@@ -11,8 +11,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_exist_data"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
+            android:layout_height="match_parent" >
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_movie_list"
@@ -41,6 +40,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_empty_data"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="match_parent">
 
             <TextView
