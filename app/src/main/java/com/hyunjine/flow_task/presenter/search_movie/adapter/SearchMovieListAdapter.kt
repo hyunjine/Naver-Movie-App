@@ -42,6 +42,7 @@ class SearchMovieListAdapter @Inject constructor(@ApplicationContext private val
             }
         }
         fun bind(movie: MovieItemDTO) {
+            logg
             binding.run {
                 tvMovieTitle.text = movie.title
                 tvMovieYear.text = movie.pubDate

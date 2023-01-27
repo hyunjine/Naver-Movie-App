@@ -8,7 +8,7 @@ class AuthHeaderInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val newRequest = chain.request().newBuilder()
             .addHeader("X-Naver-Client-Id", BuildConfig.NAVER_SEARCH_CLIENT_ID)
-            .addHeader("X-Naver-X-Naver-Client-Secret-Id", BuildConfig.NAVER_SEARCH_CLIENT_SECRET)
+            .addHeader("X-Naver-Client-Secret", BuildConfig.NAVER_SEARCH_CLIENT_SECRET)
             .build()
 
         return chain.proceed(newRequest)
