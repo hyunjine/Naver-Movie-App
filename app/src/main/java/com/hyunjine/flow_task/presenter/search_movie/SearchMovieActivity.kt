@@ -1,12 +1,13 @@
 package com.hyunjine.flow_task.presenter.search_movie
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.hyunjine.flow_task.R
+import com.hyunjine.flow_task.databinding.ActivitySearchMovieBinding
+import com.hyunjine.flow_task.presenter.common.base.BaseActivity
 
-class SearchMovieActivity : AppCompatActivity() {
+class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.activity_search_movie) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
     }
 }
