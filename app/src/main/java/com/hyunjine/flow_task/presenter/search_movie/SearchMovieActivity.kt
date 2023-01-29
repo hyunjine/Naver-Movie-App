@@ -7,12 +7,9 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.widget.addTextChangedListener
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hyunjine.flow_task.R
-import com.hyunjine.flow_task.common.loggerD
 import com.hyunjine.flow_task.databinding.ActivitySearchMovieBinding
 import com.hyunjine.flow_task.presenter.common.base.BaseActivity
 import com.hyunjine.flow_task.presenter.recent_record.RecentRecordActivity
@@ -36,7 +33,6 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
     private fun setRecyclerViewAdapter() = binding.rvMovieList.apply {
         layoutManager = LinearLayoutManager(this@SearchMovieActivity, LinearLayoutManager.VERTICAL, false)
         adapter = rvAdapter
-        itemAnimator = null
     }
 
     private fun onEvent() = binding.run {

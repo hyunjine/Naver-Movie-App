@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.hyunjine.flow_task.R
-import com.hyunjine.flow_task.common.loggerD
 import com.hyunjine.flow_task.databinding.ItemSearchMovieBinding
 import com.hyunjine.flow_task.presenter.search_movie.vo.MovieItemDTO
 import dagger.hilt.android.qualifiers.ApplicationContext

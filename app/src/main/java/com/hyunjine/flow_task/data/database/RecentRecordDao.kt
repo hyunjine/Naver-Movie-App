@@ -12,7 +12,7 @@ interface RecentRecordDao {
     @Insert
     fun insertSearchRecord(searchRecord: SearchRecordEntity): Completable
 
-    @Query("DELETE FROM RecentRecord WHERE generateTimestamp > :timestamp")
+    @Query("DELETE FROM RecentRecord WHERE generateTimestamp < :timestamp")
     fun deleteRecentRecord(timestamp: Long): Completable
 
     @Query("SELECT * FROM RecentRecord")
