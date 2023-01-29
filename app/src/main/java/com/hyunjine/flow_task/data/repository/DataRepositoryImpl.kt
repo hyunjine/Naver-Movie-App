@@ -13,8 +13,8 @@ class DataRepositoryImpl @Inject constructor(
     private val naverServerService: NaverServerService
 ) : DataRepository {
 
-    override fun getMovies(query: String, display: Int): Single<MoviesEntity> =
-        naverServerService.getSearchMovie(query, display)
+    override fun getMovies(query: String, display: Int, start: Int): Single<MoviesEntity> =
+        naverServerService.getSearchMovie(query, display, start)
 
 //    override fun getMoviesFromDataBase(): Single<MoviesEntity> {
 //

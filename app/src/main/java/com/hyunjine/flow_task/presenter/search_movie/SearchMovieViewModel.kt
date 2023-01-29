@@ -27,32 +27,59 @@ class SearchMovieViewModel @Inject constructor(
     private val _movieItems = ListLiveData<MovieItemDTO>()
     val movieItems: LiveData<MutableList<MovieItemDTO>> get() = _movieItems
 
+    private var nextPage: Int = 1
+    private var total: Int = 0
+
     val query = MutableLiveData<String>()
 
     fun getMovies() {
-        _movieItems.clear()
-        val queryTest = query.value
-        if (!checkQueryLengthUseCase(queryTest, QUERY_MIN_LENGTH)) {
+        clearMovieItemsInfo()
+        if (!checkQueryLengthUseCase(query.value, QUERY_MIN_LENGTH)) {
             setState(State.SHORT_QUERY_LENGTH_ERROR)
         } else {
-            setState(State.HIDE_KEYBOARD)
-            setState(State.SHOW_LOADING)
-            runAsync(methodName, getMoviesUseCase(queryTest!!, DISPLAY_ITEM_COUNT))
-                .subscribe({
-                    setState(State.HIDE_LOADING)
-                    setState(State.LOAD_MOVIE_ITEMS)
-                    _movieItems.addAll(it.items)
-                }, { e ->
-                    setState(State.HIDE_LOADING)
-                    if (e is NotFoundException) {
-                        setState(State.EMPTY_LOAD_MOVIE_ITEMS)
-                    } else {
-                        setState(State.NETWORK_ERROR)
-                    }
-                    loggerE(methodName, e)
-                }).addDispose()
+            fetchMovies(1)
         }
     }
+
+    fun getNextPageMovies() {
+        fetchMovies(nextPage)
+    }
+
+    private fun fetchMovies(start: Int) {
+        if (isLastPage()) {
+            setState(State.LAST_LOAD_MOVIE_ITEMS)
+            return
+        }
+        setState(State.HIDE_KEYBOARD)
+        setState(State.SHOW_LOADING)
+        runAsync(methodName, getMoviesUseCase(query.value!!, DISPLAY_ITEM_COUNT, start))
+            .subscribe({
+                total = it.total
+                nextPage = it.start + DISPLAY_ITEM_COUNT
+                setState(State.HIDE_LOADING)
+                setState(State.LOAD_MOVIE_ITEMS)
+                _movieItems.addAll(it.items)
+            }, { e ->
+                setState(State.HIDE_LOADING)
+                when (e) {
+                    is NotFoundException -> {
+                        setState(State.EMPTY_LOAD_MOVIE_ITEMS)
+                    }
+                    else -> {
+                        setState(State.NETWORK_ERROR)
+                    }
+                }
+                loggerE(methodName, e)
+            }).addDispose()
+    }
+
+    private fun clearMovieItemsInfo() {
+        _movieItems.clear()
+        nextPage = 1
+        total = 0
+    }
+
+    private fun isLastPage(): Boolean = nextPage > 1 && total < nextPage
 
     enum class State {
         SHOW_LOADING,
@@ -61,6 +88,7 @@ class SearchMovieViewModel @Inject constructor(
         NETWORK_ERROR,
         LOAD_MOVIE_ITEMS,
         EMPTY_LOAD_MOVIE_ITEMS,
+        LAST_LOAD_MOVIE_ITEMS,
         HIDE_KEYBOARD
     }
 }

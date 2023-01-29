@@ -9,6 +9,7 @@ interface NaverServerService {
     @GET("movie.json")
     fun getSearchMovie(
         @Query("query", encoded = true) query: String,
-        @Query("display") display: Int
+        @Query("display") display: Int,
+        @Query("start") start: Int,
     ): Single<MoviesEntity>
 }

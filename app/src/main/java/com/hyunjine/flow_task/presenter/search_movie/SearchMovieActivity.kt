@@ -6,7 +6,9 @@ import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hyunjine.flow_task.R
 import com.hyunjine.flow_task.common.loggerD
 import com.hyunjine.flow_task.databinding.ActivitySearchMovieBinding
@@ -24,7 +26,6 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
         super.onCreate(savedInstanceState)
         binding.vm = viewModel
         setRecyclerViewAdapter()
-        toggleDataStateLayout(false)
         onEvent()
         onUiStateEvent()
     }
@@ -32,9 +33,11 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
     private fun setRecyclerViewAdapter() = binding.rvMovieList.apply {
         layoutManager = LinearLayoutManager(this@SearchMovieActivity, LinearLayoutManager.VERTICAL, false)
         adapter = rvAdapter
+        itemAnimator = null
     }
 
     private fun onEvent() = binding.run {
+        onRecyclerViewLastIndex()
         btnSearch.setOnClickListener {
             viewModel.getMovies()
         }
@@ -62,6 +65,9 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
                 SearchMovieViewModel.State.LOAD_MOVIE_ITEMS -> {
                     toggleDataStateLayout(true)
                 }
+                SearchMovieViewModel.State.LAST_LOAD_MOVIE_ITEMS -> {
+                    showToast(R.string.search_movie_last_page)
+                }
                 SearchMovieViewModel.State.EMPTY_LOAD_MOVIE_ITEMS -> {
                     toggleDataStateLayout(false)
                 }
@@ -70,6 +76,19 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
                 }
             }
         }
+    }
+
+    private fun onRecyclerViewLastIndex() = binding.rvMovieList.apply {
+        addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val lastVisiblePosition = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                val totalCount = rvAdapter.itemCount - 1
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisiblePosition == totalCount) {
+                    viewModel.getNextPageMovies()
+                }
+            }
+        })
     }
 
     private fun toggleDataStateLayout(isExist: Boolean) = binding.run {

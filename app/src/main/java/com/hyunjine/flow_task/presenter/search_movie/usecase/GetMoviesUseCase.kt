@@ -14,8 +14,8 @@ class GetMoviesUseCase @Inject constructor(
     private val dataRepository: DataRepository,
     @ApplicationContext private val context: Context
 ) {
-    operator fun invoke(query: String, display: Int): Single<MoviesDTO> =
-        dataRepository.getMovies(query, display).map { entity ->
+    operator fun invoke(query: String, display: Int, start: Int): Single<MoviesDTO> =
+        dataRepository.getMovies(query, display, start).map { entity ->
             if (!isDataExist(entity.display)) throw NotFoundException("No longer data exist")
             val itemDto = entity.items.map {
                 val title = context.getString(
