@@ -26,6 +26,7 @@ class GetMoviesUseCase @Inject constructor(
                 )
                 val pubDate = context.getString(R.string.search_movie_pub_date_format, it.pubDate)
                 val userRating = context.getString(R.string.search_movie_user_rating_format, it.userRating)
+                it.link
                 MovieItemDTO(it.image, it.link, pubDate, title, userRating)
             }
             MoviesDTO(entity.display, entity.start, entity.total, itemDto)

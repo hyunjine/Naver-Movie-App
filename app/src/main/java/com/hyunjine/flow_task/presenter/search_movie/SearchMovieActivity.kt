@@ -1,5 +1,7 @@
 package com.hyunjine.flow_task.presenter.search_movie
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -40,6 +42,11 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
         onRecyclerViewLastIndex()
         btnSearch.setOnClickListener {
             viewModel.getMovies()
+        }
+        rvAdapter.setOnItemClickListener { movieItemDTO, _ ->
+            val url = movieItemDTO.link
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
         }
     }
 
