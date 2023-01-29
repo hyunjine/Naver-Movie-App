@@ -6,6 +6,7 @@
 
     <!-- SearchMovieActivity -->
     <string name="search_movie_empty_data">검색 결과가 없습니다.</string>
+    <string name="search_movie_min_query_length_error">최소 한 글자 이상 입력해 주세요.</string>
     <string name="search_movie_title_format">제목: %1s</string>
     <string name="search_movie_pub_date_format">출시: %1s</string>
     <string name="search_movie_user_rating_format">평점: %1s</string>

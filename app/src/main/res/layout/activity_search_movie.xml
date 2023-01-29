@@ -3,21 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="vm"
+            type="com.hyunjine.flow_task.presenter.search_movie.SearchMovieViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presenter.search_movie.SearchMovieActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/et_query"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@={vm.query}"
+                app:layout_constraintEnd_toStartOf="@id/btn_search"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.widget.Button
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search"
+                app:layout_constraintEnd_toStartOf="@id/btn_recent_search"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.widget.Button
+                android:id="@+id/btn_recent_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recent_search"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_exist_data"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_movie_list"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
                 android:clipToPadding="false"
                 android:paddingTop="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -29,19 +71,22 @@
                 android:id="@+id/pb_loading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminateTint="@color/white"
+                android:indeterminateTint="@color/black"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_empty_data"
             android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:visibility="gone"
-            android:layout_height="match_parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar">
 
             <TextView
                 android:id="@+id/tv_empty_movie_data"
@@ -49,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:text="@string/search_movie_empty_data"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

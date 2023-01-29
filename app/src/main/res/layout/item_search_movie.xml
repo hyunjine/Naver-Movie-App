@@ -36,22 +36,24 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_launcher_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.25" />
 
             <TextView
                 android:id="@+id/tv_movie_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:includeFontPadding="false"
+                android:maxLines="3"
                 android:text="Iron Man2"
                 android:textSize="13sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_movie_year"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.07"
                 app:layout_constraintStart_toEndOf="@id/img_movie_poster"
-                app:layout_constraintTop_toTopOf="@id/img_movie_poster" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_movie_year"
@@ -59,9 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:includeFontPadding="false"
-                android:text="1996-1998"
+                android:text="1996"
                 android:textSize="13sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_movie_user_rating"
                 app:layout_constraintStart_toStartOf="@id/tv_movie_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_movie_title" />
 
@@ -69,10 +70,10 @@
                 android:id="@+id/tv_movie_user_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:includeFontPadding="false"
                 android:text="4.55"
                 android:textSize="13sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_movie_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_movie_year" />
 

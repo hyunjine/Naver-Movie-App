@@ -1,6 +1,9 @@
 package com.hyunjine.flow_task.presenter.common.base
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.hyunjine.flow_task.presenter.common.base.util.Event
 import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -10,7 +13,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-open class BaseViewModel : ViewModel() {
+open class BaseViewModel<T> : ViewModel() {
     companion object {
         protected val IO_SCHEDULER: Scheduler = Schedulers.io()
         protected val SINGLE_SCHEDULER: Scheduler = Schedulers.single()
@@ -21,6 +24,12 @@ open class BaseViewModel : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
     protected val methodName: String get() = Throwable().stackTrace[1].methodName
+
+    private val _state = MutableLiveData<Event<T>>()
+    val state: LiveData<Event<T>> get() = _state
+
+    protected fun setState(state: T) { _state.value = Event(state) }
+    protected fun postState(state: T) { _state.postValue(Event(state)) }
 
     protected open fun<T> runAsync(caller: String, receiver: Single<T>, scheduler: Scheduler = IO_SCHEDULER): Single<T> = receiver
         .subscribeOn(scheduler)
