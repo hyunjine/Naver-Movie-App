@@ -74,4 +74,9 @@ dependencies {
     // Glide
     implementation deps.glide.runtime
     annotationProcessor deps.glide.compiler
+
+    // Room
+    kapt deps.room.runtime
+    kapt deps.room.compiler
+    implementation deps.room.rxjava
 }

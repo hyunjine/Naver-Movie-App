@@ -15,8 +15,11 @@ import java.util.concurrent.TimeUnit
 
 open class BaseViewModel<T> : ViewModel() {
     companion object {
+        @JvmStatic
         protected val IO_SCHEDULER: Scheduler = Schedulers.io()
+        @JvmStatic
         protected val SINGLE_SCHEDULER: Scheduler = Schedulers.single()
+        @JvmStatic
         protected val UI_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
         protected val NETWORK_TIME_OUT_MILLISECONDS: Long = 8000L
     }
@@ -36,8 +39,8 @@ open class BaseViewModel<T> : ViewModel() {
         .observeOn(UI_SCHEDULER)
         .timeout(NETWORK_TIME_OUT_MILLISECONDS, TimeUnit.MILLISECONDS)
 
-    protected open fun runAsync(caller: String, receiver: Completable): Completable = receiver
-        .subscribeOn(IO_SCHEDULER)
+    protected open fun runAsync(caller: String, receiver: Completable, scheduler: Scheduler = IO_SCHEDULER): Completable = receiver
+        .subscribeOn(scheduler)
         .observeOn(UI_SCHEDULER)
         .timeout(NETWORK_TIME_OUT_MILLISECONDS, TimeUnit.MILLISECONDS)
 

@@ -10,6 +10,7 @@ import com.hyunjine.flow_task.presenter.common.base.BaseViewModel
 import com.hyunjine.flow_task.presenter.common.base.util.ListLiveData
 import com.hyunjine.flow_task.presenter.search_movie.usecase.CheckQueryLengthUseCase
 import com.hyunjine.flow_task.presenter.search_movie.usecase.GetMoviesUseCase
+import com.hyunjine.flow_task.presenter.search_movie.usecase.InsertSearchRecordUseCase
 import com.hyunjine.flow_task.presenter.search_movie.vo.MovieItemDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchMovieViewModel @Inject constructor(
     private val getMoviesUseCase: GetMoviesUseCase,
-    private val checkQueryLengthUseCase: CheckQueryLengthUseCase
+    private val checkQueryLengthUseCase: CheckQueryLengthUseCase,
+    private val insertSearchRecordUseCase: InsertSearchRecordUseCase
 ): BaseViewModel<SearchMovieViewModel.State>() {
     companion object {
         private const val DISPLAY_ITEM_COUNT: Int = 15
@@ -38,6 +40,7 @@ class SearchMovieViewModel @Inject constructor(
             setState(State.SHORT_QUERY_LENGTH_ERROR)
         } else {
             fetchMovies(1)
+            insertSearchRecord()
         }
     }
 
@@ -81,6 +84,14 @@ class SearchMovieViewModel @Inject constructor(
 
     private fun isLastPage(): Boolean = nextPage > 1 && total < nextPage
 
+    private fun insertSearchRecord() {
+        runAsync(methodName, insertSearchRecordUseCase(query.value!!), SINGLE_SCHEDULER)
+            .subscribe({
+                loggerD(methodName, "Insert Complete")
+            }, {
+                loggerE(methodName, it)
+            }).addDispose()
+    }
     enum class State {
         SHOW_LOADING,
         HIDE_LOADING,

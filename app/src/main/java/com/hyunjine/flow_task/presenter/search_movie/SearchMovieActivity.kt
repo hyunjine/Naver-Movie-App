@@ -15,6 +15,7 @@ import com.hyunjine.flow_task.R
 import com.hyunjine.flow_task.common.loggerD
 import com.hyunjine.flow_task.databinding.ActivitySearchMovieBinding
 import com.hyunjine.flow_task.presenter.common.base.BaseActivity
+import com.hyunjine.flow_task.presenter.recent_record.RecentRecordActivity
 import com.hyunjine.flow_task.presenter.search_movie.adapter.SearchMovieListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -47,6 +48,9 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
             val url = movieItemDTO.link
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
+        }
+        btnRecentSearch.setOnClickListener {
+            startActivity(Intent(this@SearchMovieActivity, RecentRecordActivity::class.java))
         }
     }
 
