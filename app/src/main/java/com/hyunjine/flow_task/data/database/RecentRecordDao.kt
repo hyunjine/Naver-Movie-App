@@ -2,6 +2,7 @@ package com.hyunjine.flow_task.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.hyunjine.flow_task.data.database.vo.SearchRecordEntity
 import io.reactivex.Completable
@@ -9,7 +10,7 @@ import io.reactivex.Single
 
 @Dao
 interface RecentRecordDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSearchRecord(searchRecord: SearchRecordEntity): Completable
 
     @Query("DELETE FROM RecentRecord WHERE generateTimestamp < :timestamp")

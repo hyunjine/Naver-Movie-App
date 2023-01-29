@@ -34,28 +34,30 @@ class SearchMovieViewModel @Inject constructor(
 
     val query = MutableLiveData<String>()
 
-    fun getMovies() {
+    fun getMovies(_query: String? = null) {
         clearMovieItemsInfo()
-        if (!checkQueryLengthUseCase(query.value, QUERY_MIN_LENGTH)) {
+        val word = _query ?: query.value
+        if (!checkQueryLengthUseCase(word, QUERY_MIN_LENGTH)) {
             setState(State.SHORT_QUERY_LENGTH_ERROR)
         } else {
-            fetchMovies(1)
-            insertSearchRecord()
+            query.value = word!!
+            fetchMovies(1, word)
+            insertSearchRecord(word)
         }
     }
 
     fun getNextPageMovies() {
-        fetchMovies(nextPage)
+        fetchMovies(nextPage, query.value!!)
     }
 
-    private fun fetchMovies(start: Int) {
+    private fun fetchMovies(start: Int, word: String) {
         if (isLastPage()) {
             setState(State.LAST_LOAD_MOVIE_ITEMS)
             return
         }
         setState(State.HIDE_KEYBOARD)
         setState(State.SHOW_LOADING)
-        runAsync(methodName, getMoviesUseCase(query.value!!, DISPLAY_ITEM_COUNT, start))
+        runAsync(methodName, getMoviesUseCase(word, DISPLAY_ITEM_COUNT, start))
             .subscribe({
                 total = it.total
                 nextPage = it.start + DISPLAY_ITEM_COUNT
@@ -84,11 +86,12 @@ class SearchMovieViewModel @Inject constructor(
 
     private fun isLastPage(): Boolean = nextPage > 1 && total < nextPage
 
-    private fun insertSearchRecord() {
-        runAsync(methodName, insertSearchRecordUseCase(query.value!!), SINGLE_SCHEDULER)
+    private fun insertSearchRecord(word: String) {
+        runAsync(methodName, insertSearchRecordUseCase(word), SINGLE_SCHEDULER)
             .subscribe({
-                loggerD(methodName, "Insert Complete")
+                setState(State.SUCCESS_INSERT)
             }, {
+                setState(State.FAIL_INSERT)
                 loggerE(methodName, it)
             }).addDispose()
     }
@@ -100,6 +103,8 @@ class SearchMovieViewModel @Inject constructor(
         LOAD_MOVIE_ITEMS,
         EMPTY_LOAD_MOVIE_ITEMS,
         LAST_LOAD_MOVIE_ITEMS,
-        HIDE_KEYBOARD
+        HIDE_KEYBOARD,
+        SUCCESS_INSERT,
+        FAIL_INSERT
     }
 }

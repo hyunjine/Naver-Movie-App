@@ -1,17 +1,17 @@
 package com.hyunjine.flow_task.presenter.recent_record
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyunjine.flow_task.R
-import com.hyunjine.flow_task.common.loggerD
 import com.hyunjine.flow_task.databinding.ActivityRecentRecordBinding
 import com.hyunjine.flow_task.presenter.common.base.BaseActivity
 import com.hyunjine.flow_task.presenter.recent_record.adapter.RecentRecordListAdapter
-import com.hyunjine.flow_task.presenter.search_movie.SearchMovieViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class RecentRecordActivity : BaseActivity<ActivityRecentRecordBinding>(R.layout.activity_recent_record) {
@@ -24,18 +24,23 @@ class RecentRecordActivity : BaseActivity<ActivityRecentRecordBinding>(R.layout.
         viewModel.getRecentRecord()
         onEvent()
         onUiStateEvent()
-        viewModel.recentRecord.observe(this) {
-            rvAdapter.submitList(it.toList())
-        }
     }
     
     private fun onEvent() = binding.run { 
         rvAdapter.setOnItemClickListener { searchRecordDTO, i ->
+            Intent().apply {
+                putExtra("word", searchRecordDTO.word)
+                setResult(RESULT_OK, this)
+                finish()
+            }
 
         }
     }
     
     private fun onUiStateEvent() = viewModel.run {
+        recentRecord.observe(this@RecentRecordActivity) {
+            rvAdapter.submitList(it.toList())
+        }
         state.observe(this@RecentRecordActivity) { eventWrapper ->
             val event = eventWrapper.getContentIfNotHandled() ?: return@observe
             when (event) {

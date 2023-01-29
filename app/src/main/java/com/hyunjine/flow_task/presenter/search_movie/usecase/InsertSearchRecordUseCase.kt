@@ -10,6 +10,6 @@ class InsertSearchRecordUseCase @Inject constructor(
 ) {
     operator fun invoke(word: String): Completable =
         dataRepository.insertSearchRecordFromDataBase(
-            SearchRecordEntity(System.currentTimeMillis(), word)
+            SearchRecordEntity(word, System.currentTimeMillis())
         )
 }

@@ -4,12 +4,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
 import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hyunjine.flow_task.R
+import com.hyunjine.flow_task.common.loggerD
 import com.hyunjine.flow_task.databinding.ActivitySearchMovieBinding
 import com.hyunjine.flow_task.presenter.common.base.BaseActivity
 import com.hyunjine.flow_task.presenter.recent_record.RecentRecordActivity
@@ -18,9 +22,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.activity_search_movie) {
+class SearchMovieActivity :
+    BaseActivity<ActivitySearchMovieBinding>(R.layout.activity_search_movie) {
     private val viewModel: SearchMovieViewModel by viewModels()
-    @Inject lateinit var rvAdapter: SearchMovieListAdapter
+    @Inject
+    lateinit var rvAdapter: SearchMovieListAdapter
+    private lateinit var getResult: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +38,8 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
     }
 
     private fun setRecyclerViewAdapter() = binding.rvMovieList.apply {
-        layoutManager = LinearLayoutManager(this@SearchMovieActivity, LinearLayoutManager.VERTICAL, false)
+        layoutManager =
+            LinearLayoutManager(this@SearchMovieActivity, LinearLayoutManager.VERTICAL, false)
         adapter = rvAdapter
     }
 
@@ -46,7 +54,15 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
             startActivity(intent)
         }
         btnRecentSearch.setOnClickListener {
-            startActivity(Intent(this@SearchMovieActivity, RecentRecordActivity::class.java))
+            getResult.launch(Intent(this@SearchMovieActivity, RecentRecordActivity::class.java))
+        }
+        getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                loggerD("", it.data?.getStringExtra("word"))
+                it.data?.getStringExtra("word")?.let { word ->
+                    viewModel.getMovies(word)
+                }
+            }
         }
     }
 
@@ -81,6 +97,12 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
                 SearchMovieViewModel.State.HIDE_KEYBOARD -> {
                     hideKeyboard()
                 }
+                SearchMovieViewModel.State.SUCCESS_INSERT -> {
+
+                }
+                SearchMovieViewModel.State.FAIL_INSERT -> {
+
+                }
             }
         }
     }
@@ -89,7 +111,8 @@ class SearchMovieActivity : BaseActivity<ActivitySearchMovieBinding>(R.layout.ac
         addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                val lastVisiblePosition = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                val lastVisiblePosition =
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                 val totalCount = rvAdapter.itemCount - 1
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisiblePosition == totalCount) {
                     viewModel.getNextPageMovies()

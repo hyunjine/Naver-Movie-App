@@ -28,23 +28,21 @@ class RecentRecordViewModel @Inject constructor(
     fun getRecentRecord() {
         runAsync(methodName, getRecentRecordUseCase(), SINGLE_SCHEDULER)
             .subscribe({ dto ->
-                when {
-                    dto.isEmpty() -> {
+                when (dto.size) {
+                    0 -> {
                         setState(State.EMPTY_DATA)
                     }
-                    dto.size > MAX_DISPLAY_INDEX -> {
+                    in 1.. MAX_DISPLAY_INDEX -> {
                         val sort = dto.sortedByDescending { it.generateTimestamp }
-                        val standardTimestamp = sort[MAX_DISPLAY_INDEX - 1].generateTimestamp
-                        deleteRecentRecord(standardTimestamp)
-                        val requireData = sort
-                            .slice(0 until MAX_DISPLAY_INDEX)
-
-                        _recentRecord.addAll(requireData)
+                        _recentRecord.addAll(sort)
                         setState(State.SUCCESS_GET)
                     }
                     else -> {
                         val sort = dto.sortedByDescending { it.generateTimestamp }
-                        _recentRecord.addAll(sort)
+                        val standardTimestamp = sort[MAX_DISPLAY_INDEX - 1].generateTimestamp
+                        deleteRecentRecord(standardTimestamp)
+                        val requireData = sort.slice(0 until MAX_DISPLAY_INDEX)
+                        _recentRecord.addAll(requireData)
                         setState(State.SUCCESS_GET)
                     }
                 }

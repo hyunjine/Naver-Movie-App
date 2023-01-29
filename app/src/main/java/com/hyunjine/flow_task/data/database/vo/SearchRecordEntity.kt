@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "RecentRecord")
 data class SearchRecordEntity(
     @PrimaryKey(autoGenerate = false)
-    @SerializedName("generateTimestamp")
-    val generateTimestamp: Long,
     @SerializedName("word")
-    val word: String
+    val word: String,
+    @SerializedName("generateTimestamp")
+    val generateTimestamp: Long
 )
