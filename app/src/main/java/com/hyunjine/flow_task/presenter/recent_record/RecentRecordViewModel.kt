@@ -23,7 +23,7 @@ class RecentRecordViewModel @Inject constructor(
         private const val MAX_DISPLAY_INDEX: Int = 10
     }
     private val _recentRecord = ListLiveData<SearchRecordDTO>()
-    val recentRecord: LiveData<MutableList<SearchRecordDTO>> get() = _recentRecord
+    val recentRecord: LiveData<out List<SearchRecordDTO>> get() = _recentRecord
 
     fun getRecentRecord() {
         runAsync(methodName, getRecentRecordUseCase(), SINGLE_SCHEDULER)

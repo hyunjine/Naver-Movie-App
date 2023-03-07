@@ -1,10 +1,8 @@
 package com.hyunjine.flow_task.presenter.search_movie
 
-import android.content.res.Resources.NotFoundException
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.hyunjine.flow_task.common.loggerD
+import androidx.lifecycle.viewModelScope
 import com.hyunjine.flow_task.common.loggerE
 import com.hyunjine.flow_task.presenter.common.base.BaseViewModel
 import com.hyunjine.flow_task.presenter.common.base.util.ListLiveData
@@ -13,6 +11,8 @@ import com.hyunjine.flow_task.presenter.search_movie.usecase.GetMoviesUseCase
 import com.hyunjine.flow_task.presenter.search_movie.usecase.InsertSearchRecordUseCase
 import com.hyunjine.flow_task.presenter.search_movie.vo.MovieItemDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,25 +57,28 @@ class SearchMovieViewModel @Inject constructor(
         }
         setState(State.HIDE_KEYBOARD)
         setState(State.SHOW_LOADING)
-        runAsync(methodName, getMoviesUseCase(word, DISPLAY_ITEM_COUNT, start))
-            .subscribe({
-                total = it.total
-                nextPage = it.start + DISPLAY_ITEM_COUNT
-                setState(State.HIDE_LOADING)
-                setState(State.LOAD_MOVIE_ITEMS)
-                _movieItems.addAll(it.items)
-            }, { e ->
-                setState(State.HIDE_LOADING)
-                when (e) {
-                    is NotFoundException -> {
-                        setState(State.EMPTY_LOAD_MOVIE_ITEMS)
-                    }
-                    else -> {
-                        setState(State.NETWORK_ERROR)
-                    }
-                }
-                loggerE(methodName, e)
-            }).addDispose()
+        viewModelScope.launch(Dispatchers.Main) {
+            getMoviesUseCase(word, DISPLAY_ITEM_COUNT, start)
+        }
+//        runAsync(methodName, getMoviesUseCase(word, DISPLAY_ITEM_COUNT, start))
+//            .subscribe({
+//                total = it.total
+//                nextPage = it.start + DISPLAY_ITEM_COUNT
+//                setState(State.HIDE_LOADING)
+//                setState(State.LOAD_MOVIE_ITEMS)
+//                _movieItems.addAll(it.items)
+//            }, { e ->
+//                setState(State.HIDE_LOADING)
+//                when (e) {
+//                    is NotFoundException -> {
+//                        setState(State.EMPTY_LOAD_MOVIE_ITEMS)
+//                    }
+//                    else -> {
+//                        setState(State.NETWORK_ERROR)
+//                    }
+//                }
+//                loggerE(methodName, e)
+//            }).addDispose()
     }
 
     private fun clearMovieItemsInfo() {

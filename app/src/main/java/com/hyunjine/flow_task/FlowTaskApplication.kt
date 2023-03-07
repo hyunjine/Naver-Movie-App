@@ -13,6 +13,19 @@ class FlowTaskApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         setRxJava()
+        val user = User("홍길동", "2023-02-22")
+        user.get().name = ""
+    }
+
+    data class User(
+        private var _name: String,
+        private var _birth: String
+    ) {
+        var name: String = ""
+            get() = _name
+        var birth: String = ""
+            get() = _birth
+        fun get(): User = User(_name, _birth)
     }
 
     private fun setRxJava() {

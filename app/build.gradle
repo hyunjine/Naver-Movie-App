@@ -54,6 +54,9 @@ dependencies {
 
     // ktx
     implementation deps.activity_ktx
+    
+    // Coroutine
+    implementation deps.coroutine
 
     // RxJava
     implementation deps.rx.java
