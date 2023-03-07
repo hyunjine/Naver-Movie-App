@@ -7,7 +7,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 interface DataRepository {
-    fun getMovies(query: String, display: Int, start: Int): Single<MoviesEntity>
+    suspend fun getMovies(query: String, display: Int, start: Int): MoviesEntity
 
     fun getRecentRecordFromDataBase(): Single<List<SearchRecordEntity>>
     fun insertSearchRecordFromDataBase(searchRecord: SearchRecordEntity): Completable

@@ -17,7 +17,7 @@ class DataRepositoryImpl @Inject constructor(
     private val recentRecordDao: RecentRecordDao
 ) : DataRepository {
 
-    override fun getMovies(query: String, display: Int, start: Int): Single<MoviesEntity> =
+    override suspend fun getMovies(query: String, display: Int, start: Int): MoviesEntity =
         naverServerService.getSearchMovie(query, display, start)
 
     override fun getRecentRecordFromDataBase(): Single<List<SearchRecordEntity>> =

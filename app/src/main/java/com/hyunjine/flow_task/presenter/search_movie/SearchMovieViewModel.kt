@@ -1,5 +1,6 @@
 package com.hyunjine.flow_task.presenter.search_movie
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -58,27 +59,22 @@ class SearchMovieViewModel @Inject constructor(
         setState(State.HIDE_KEYBOARD)
         setState(State.SHOW_LOADING)
         viewModelScope.launch(Dispatchers.Main) {
-            getMoviesUseCase(word, DISPLAY_ITEM_COUNT, start)
+            runCatching { getMoviesUseCase(word, DISPLAY_ITEM_COUNT, start) }
+                .onSuccess {
+                    total = it.total
+                    nextPage = it.start + DISPLAY_ITEM_COUNT
+                    setState(State.HIDE_LOADING)
+                    setState(State.LOAD_MOVIE_ITEMS)
+                    _movieItems.addAll(it.items)
+                }.onFailure {
+                    setState(State.HIDE_LOADING)
+                    when (it) {
+                        is Resources.NotFoundException -> { setState(State.EMPTY_LOAD_MOVIE_ITEMS) }
+                        else -> { setState(State.NETWORK_ERROR) }
+                    }
+                    loggerE(methodName, it)
+                }
         }
-//        runAsync(methodName, getMoviesUseCase(word, DISPLAY_ITEM_COUNT, start))
-//            .subscribe({
-//                total = it.total
-//                nextPage = it.start + DISPLAY_ITEM_COUNT
-//                setState(State.HIDE_LOADING)
-//                setState(State.LOAD_MOVIE_ITEMS)
-//                _movieItems.addAll(it.items)
-//            }, { e ->
-//                setState(State.HIDE_LOADING)
-//                when (e) {
-//                    is NotFoundException -> {
-//                        setState(State.EMPTY_LOAD_MOVIE_ITEMS)
-//                    }
-//                    else -> {
-//                        setState(State.NETWORK_ERROR)
-//                    }
-//                }
-//                loggerE(methodName, e)
-//            }).addDispose()
     }
 
     private fun clearMovieItemsInfo() {
